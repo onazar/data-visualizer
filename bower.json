@@ -1,0 +1,10 @@
+{
+  "name": "DataVisualizer",
+  "dependencies": {
+    "angular": "1.4.4",
+    "angular-ui-router": "latest",
+    "angular-resource": "latest",
+    "bootstrap-sass-official": "latest",
+    "angular-google-chart": "latest"
+  }
+}

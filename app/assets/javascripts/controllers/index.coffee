@@ -175,14 +175,11 @@ app.controller 'index', [ '$scope', '$timeout', 'History',  ($scope, $timeout, H
         date = shortBuildDate
         initializeCounters()
         countStatus(build.status)
-
     # push last day
     frequencies[date] = failed + error + stopped
     pushRowToPassingFailingChart(date, successfull, failed, error, stopped)
-
-    setAnnotationsToPassingFailingChart()
-
     # display charts
+    setAnnotationsToPassingFailingChart()
     $scope.passingFailingChart.data.rows = passingFailingChartRows
     $timeout ->
       $scope.loading = false

@@ -3,6 +3,12 @@ app.controller 'index', [ '$scope', '$timeout', 'History',  ($scope, $timeout, H
   # hide charts and show loaging gif
   $scope.loading = true
 
+  passingFailingChartRows = []
+# why 'frequencies', when it is 'failingFrequencies'? Because it can by pretty much anything,
+# the comparison is made only between the values of this hash and its median.
+# For example, it can be successful/failing ratio. See also 'getMedian' method.
+  frequencies = {}
+
   $scope.passingFailingChart = {
     type: "ColumnChart"
     data:
@@ -75,25 +81,7 @@ app.controller 'index', [ '$scope', '$timeout', 'History',  ($scope, $timeout, H
   }
 
   pushRowToPassingFailingChart = (date, successfull, failed, error, stopped) ->
-    all = successfull + failed + error + stopped
-    badCases = all - successfull
-    annotation = annotationText = ''
-    if badCases > 0
-      if Math.round(all / badCases) < 2
-        annotation = 'W!'
-        annotationText = "
-            <div class=\"annotation-popover\">
-              <p><b>Abnormal number of failing builds (more than 50%)</b></p>
-              <p>Details:</p>
-              <ul>
-                <li>Date: #{date.toDateString()}</li>
-                <li>Successfull: #{successfull} builds</li>
-                <li>Failed: #{failed} builds</li>
-                <li>With errors: #{error} builds</li>
-                <li>Stopped: #{stopped} builds</li>
-              </ul>
-            </div>"
-    $scope.passingFailingChart.data.rows.push(
+    passingFailingChartRows.push(
       c: [
         v: date
       ,
@@ -109,11 +97,9 @@ app.controller 'index', [ '$scope', '$timeout', 'History',  ($scope, $timeout, H
         v: stopped
         f: "#{stopped} builds"
       ,
-        v: annotation
-        f: "#{annotation}"
+        v: ''
       ,
-        v: annotationText
-        f: "#{annotationText}"
+        v: ''
       ]
     )
 
@@ -140,6 +126,38 @@ app.controller 'index', [ '$scope', '$timeout', 'History',  ($scope, $timeout, H
 
   shortDate = (longDateString) -> new Date(longDateString.substr(0, 10).replace(/-/g, ','))
 
+  getMedian = (values) ->
+  # reject 0 because it is not 'normal', but 'perfect'
+    values = values.filter (e) -> e > 0
+    values.sort (a, b) -> a - b
+    half = Math.floor(values.length / 2)
+    if values.length % 2
+      values[half]
+    else
+      Math.round((values[half-1] + values[half]) / 2.0)
+
+  setAnnotationsToPassingFailingChart = ->
+    failingMedian = getMedian(Object.keys(frequencies).map((key) -> frequencies[key]))
+    for row in passingFailingChartRows
+      # if today failing rate higher than usually
+      if frequencies[row.c[0].v] > failingMedian
+        annotation = 'W!'
+        annotationText = "
+            <div class=\"annotation-popover\">
+              <p><b>Failing rate higher than usually</b></p>
+              <p>Details:</p>
+              <ul>
+                <li>Current usual fails/day rate: #{failingMedian}</li>
+                <li>Date: #{row.c[0].v.toDateString()}</li>
+                <li>Successfull: #{row.c[1].v} builds</li>
+                <li>Failed: #{row.c[2].v} builds</li>
+                <li>With errors: #{row.c[3].v} builds</li>
+                <li>Stopped: #{row.c[4].v} builds</li>
+              </ul>
+            </div>"
+        row.c[5].v = annotation
+        row.c[6].v = annotationText
+
   History.get().then (response) ->
     if response.length == 0
       $scope.warningText = 'There is no data to display'
@@ -152,16 +170,24 @@ app.controller 'index', [ '$scope', '$timeout', 'History',  ($scope, $timeout, H
       if date.getTime() == shortBuildDate.getTime()
         countStatus(build.status)
       else
+        frequencies[date] = failed + error + stopped
         pushRowToPassingFailingChart(date, successfull, failed, error, stopped)
         date = shortBuildDate
         initializeCounters()
         countStatus(build.status)
+
     # push last day
+    frequencies[date] = failed + error + stopped
     pushRowToPassingFailingChart(date, successfull, failed, error, stopped)
+
+    setAnnotationsToPassingFailingChart()
+
     # display charts
+    $scope.passingFailingChart.data.rows = passingFailingChartRows
     $timeout ->
       $scope.loading = false
     , 500
   ,(errorResponse) ->
     $scope.errorText = "Sorry, but an error occurred: #{errorResponse.statusText}"
+
 ]

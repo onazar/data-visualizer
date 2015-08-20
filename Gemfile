@@ -4,7 +4,7 @@ ruby '2.2.0'
 
 gem 'rails', '4.2.0'
 
-gem 'pg'
+# gem 'sqlite3'
 gem 'bower-rails'
 gem 'jbuilder', '~> 2.0'
 
@@ -21,6 +21,9 @@ gem 'jquery-rails'
 
 group :development, :test do
   gem 'spring'
+  gem 'rspec-rails', '~> 3.0'
+  gem 'capybara'
+  gem 'selenium-webdriver'
 end
 
 group :production do

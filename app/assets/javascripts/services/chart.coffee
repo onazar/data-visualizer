@@ -39,6 +39,7 @@ app.service 'chartService', [ ->
       bar:
         groupWidth: '90%'
       isStacked: true
+      defaultColors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF']
       colors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF']
       tooltip:
         isHtml: true
@@ -49,6 +50,8 @@ app.service 'chartService', [ ->
       ,
       hAxis:
         title: 'Date'
+    view:
+      columns: [0, 1, 2, 3, 4, 5, 6]
   }
 
   buildDurationChart = {
@@ -156,6 +159,7 @@ app.service 'chartService', [ ->
     else
       Math.round((values[half-1] + values[half]) / 2.0)
 
+# Annotation will be set to "Stopped" series. To change it, set annotaion cols after needed series. I mean, order is important.
   setAnnotationsToPassingFailingChart = ->
     failingMedian = getMedian(Object.keys(frequencies).map((key) -> frequencies[key]))
     for row in passingFailingChart.data.rows

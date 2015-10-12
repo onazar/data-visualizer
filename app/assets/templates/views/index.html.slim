@@ -5,6 +5,6 @@ div.text-center data-ng-show="loading && !errorText && !warningText"
 
 div.well data-ng-class="loading ? 'hdn' : ''" data-ng-hide="errorText || warningText"
   h2 Passing and failing builds per day
-  div(data-google-chart data-chart="passingFailingChart")
+  div(data-google-chart data-chart="passingFailingChart" on-select="hideSeries(selectedItem)")
   h2 Build duration vs. time
   div(data-google-chart data-chart="buildDurationChart")

@@ -27,7 +27,6 @@ app.controller 'index', [ '$scope', '$timeout', 'History', 'chartService',  ($sc
         $scope.passingFailingChart.view.columns[col] = {
           label: $scope.passingFailingChart.data.cols[col].label
           type: $scope.passingFailingChart.data.cols[col].type
-#          calc: -> null
         }
         $scope.passingFailingChart.options.colors[col - 1] = '#CCCCCC'
       else

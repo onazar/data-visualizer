@@ -6,23 +6,27 @@ app.service 'chartService', [ ->
   frequencies = {}
 
   passingFailingChart = {
-    type: "ColumnChart"
+    type: 'ColumnChart'
     data:
       cols: [
-        label: "Date"
-        type: "date"
+        label: 'Date'
+        type: 'date'
       ,
-        label: "Successfull"
-        type: "number"
+        label: 'Successfull'
+        type: 'number'
       ,
-        label: "Failed"
-        type: "number"
+        label: 'Failed'
+        type: 'number'
       ,
-        label: "Error"
-        type: "number"
+        label: 'Error'
+        type: 'number'
       ,
-        label: "Stopped"
-        type: "number"
+        label: 'Stopped'
+        type: 'number'
+      ,
+        # invisible series for annotations
+        label: 'abnormal days'
+        type: 'number'
       ,
         type: 'string'
         role: 'annotation'
@@ -39,8 +43,8 @@ app.service 'chartService', [ ->
       bar:
         groupWidth: '90%'
       isStacked: true
-      defaultColors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF']
-      colors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF']
+      defaultColors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF', '#000000']
+      colors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF', '#000000']
       tooltip:
         isHtml: true
       vAxis:
@@ -51,7 +55,7 @@ app.service 'chartService', [ ->
       hAxis:
         title: 'Date'
     view:
-      columns: [0, 1, 2, 3, 4, 5, 6]
+      columns: [0, 1, 2, 3, 4, 5, 6, 7]
   }
 
   buildDurationChart = {
@@ -81,11 +85,10 @@ app.service 'chartService', [ ->
 
   successfull = failed = error = stopped = 0
 
-  buildCharts = (rawData) ->
-    date = shortDate(rawData[0].createdAt)
+  buildPassingFailingChart = (data) ->
+    date = shortDate(data[0].createdAt)
     initializeCounters()
-    for build in rawData
-      pushRowToBuildDurationChart(build.sessionId, build.duration)
+    for build in data
       shortBuildDate = shortDate(build.createdAt)
       if date.getTime() == shortBuildDate.getTime()
         countStatus(build.status)
@@ -99,11 +102,12 @@ app.service 'chartService', [ ->
     frequencies[date] = failed + error + stopped
     pushRowToPassingFailingChart(date, successfull, failed, error, stopped)
     setAnnotationsToPassingFailingChart()
-    return {
-      passingFailingChart: passingFailingChart
-      buildDurationChart: buildDurationChart
-    }
+    passingFailingChart
 
+  buildBuildDurationChart = (data) ->
+    for build in data
+      pushRowToBuildDurationChart(build.sessionId, build.duration)
+    buildDurationChart
 
   pushRowToPassingFailingChart = (date, successfull, failed, error, stopped) ->
     passingFailingChart.data.rows.push(
@@ -121,6 +125,9 @@ app.service 'chartService', [ ->
       ,
         v: stopped
         f: "#{stopped} builds"
+      ,
+        # it always should be 0. abnormal series invisibility depends on it.
+        v: 0
       ,
         v: ''
       ,
@@ -179,10 +186,11 @@ app.service 'chartService', [ ->
                 <li>Stopped: #{row.c[4].v} builds</li>
               </ul>
             </div>"
-        row.c[5].v = annotation
-        row.c[6].v = annotationText
+        row.c[6].v = annotation
+        row.c[7].v = annotationText
 
   return {
-    buildCharts: buildCharts
+    buildPassingFailingChart: buildPassingFailingChart
+    buildBuildDurationChart: buildBuildDurationChart
   }
 ]

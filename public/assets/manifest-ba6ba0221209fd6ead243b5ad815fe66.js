@@ -48118,27 +48118,30 @@ return jQuery;
 (function() {
   app.service('chartService', [
     function() {
-      var buildCharts, buildDurationChart, countStatus, error, failed, frequencies, getMedian, initializeCounters, passingFailingChart, pushRowToBuildDurationChart, pushRowToPassingFailingChart, setAnnotationsToPassingFailingChart, shortDate, stopped, successfull;
+      var buildBuildDurationChart, buildDurationChart, buildPassingFailingChart, countStatus, error, failed, frequencies, getMedian, initializeCounters, passingFailingChart, pushRowToBuildDurationChart, pushRowToPassingFailingChart, setAnnotationsToPassingFailingChart, shortDate, stopped, successfull;
       frequencies = {};
       passingFailingChart = {
-        type: "ColumnChart",
+        type: 'ColumnChart',
         data: {
           cols: [
             {
-              label: "Date",
-              type: "date"
+              label: 'Date',
+              type: 'date'
             }, {
-              label: "Successfull",
-              type: "number"
+              label: 'Successfull',
+              type: 'number'
             }, {
-              label: "Failed",
-              type: "number"
+              label: 'Failed',
+              type: 'number'
             }, {
-              label: "Error",
-              type: "number"
+              label: 'Error',
+              type: 'number'
             }, {
-              label: "Stopped",
-              type: "number"
+              label: 'Stopped',
+              type: 'number'
+            }, {
+              label: 'abnormal days',
+              type: 'number'
             }, {
               type: 'string',
               role: 'annotation'
@@ -48157,8 +48160,8 @@ return jQuery;
             groupWidth: '90%'
           },
           isStacked: true,
-          defaultColors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF'],
-          colors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF'],
+          defaultColors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF', '#000000'],
+          colors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF', '#000000'],
           tooltip: {
             isHtml: true
           },
@@ -48173,7 +48176,7 @@ return jQuery;
           }
         },
         view: {
-          columns: [0, 1, 2, 3, 4, 5, 6]
+          columns: [0, 1, 2, 3, 4, 5, 6, 7]
         }
       };
       buildDurationChart = {
@@ -48205,13 +48208,12 @@ return jQuery;
         }
       };
       successfull = failed = error = stopped = 0;
-      buildCharts = function(rawData) {
+      buildPassingFailingChart = function(data) {
         var build, date, i, len, shortBuildDate;
-        date = shortDate(rawData[0].createdAt);
+        date = shortDate(data[0].createdAt);
         initializeCounters();
-        for (i = 0, len = rawData.length; i < len; i++) {
-          build = rawData[i];
-          pushRowToBuildDurationChart(build.sessionId, build.duration);
+        for (i = 0, len = data.length; i < len; i++) {
+          build = data[i];
           shortBuildDate = shortDate(build.createdAt);
           if (date.getTime() === shortBuildDate.getTime()) {
             countStatus(build.status);
@@ -48226,10 +48228,15 @@ return jQuery;
         frequencies[date] = failed + error + stopped;
         pushRowToPassingFailingChart(date, successfull, failed, error, stopped);
         setAnnotationsToPassingFailingChart();
-        return {
-          passingFailingChart: passingFailingChart,
-          buildDurationChart: buildDurationChart
-        };
+        return passingFailingChart;
+      };
+      buildBuildDurationChart = function(data) {
+        var build, i, len;
+        for (i = 0, len = data.length; i < len; i++) {
+          build = data[i];
+          pushRowToBuildDurationChart(build.sessionId, build.duration);
+        }
+        return buildDurationChart;
       };
       pushRowToPassingFailingChart = function(date, successfull, failed, error, stopped) {
         return passingFailingChart.data.rows.push({
@@ -48248,6 +48255,8 @@ return jQuery;
             }, {
               v: stopped,
               f: stopped + " builds"
+            }, {
+              v: 0
             }, {
               v: ''
             }, {
@@ -48313,8 +48322,8 @@ return jQuery;
           if (frequencies[row.c[0].v] > failingMedian) {
             annotation = 'W!';
             annotationText = "<p><b>Failing rate higher than usually</b></p> <div class=\"annotation-popover\"> <p>Details:</p> <ul> <li>Current usual fails/day rate: " + failingMedian + "</li> <li>Date: " + (row.c[0].v.toDateString()) + "</li> <li>Successfull: " + row.c[1].v + " builds</li> <li>Failed: " + row.c[2].v + " builds</li> <li>With errors: " + row.c[3].v + " builds</li> <li>Stopped: " + row.c[4].v + " builds</li> </ul> </div>";
-            row.c[5].v = annotation;
-            results.push(row.c[6].v = annotationText);
+            row.c[6].v = annotation;
+            results.push(row.c[7].v = annotationText);
           } else {
             results.push(void 0);
           }
@@ -48322,7 +48331,8 @@ return jQuery;
         return results;
       };
       return {
-        buildCharts: buildCharts
+        buildPassingFailingChart: buildPassingFailingChart,
+        buildBuildDurationChart: buildBuildDurationChart
       };
     }
   ]);
@@ -48332,22 +48342,25 @@ return jQuery;
   app.controller('index', [
     '$scope', '$timeout', 'History', 'chartService', function($scope, $timeout, History, chartService) {
       $scope.loading = true;
-      History.get().then(function(response) {
-        var charts;
-        if (response.length === 0) {
-          $scope.warningText = 'There is no data to display';
-          return;
-        }
-        charts = chartService.buildCharts(response);
-        $scope.passingFailingChart = charts.passingFailingChart;
-        $scope.buildDurationChart = charts.buildDurationChart;
-        return $timeout(function() {
-          return $scope.loading = false;
-        }, 500);
-      }, function(errorResponse) {
-        return $scope.errorText = "Sorry, but an error occurred: " + errorResponse.statusText;
-      });
-      return $scope.hideSeries = function(selectedItem) {
+      $scope.getData = function() {
+        return History.get().then(function(response) {
+          if (response === 0) {
+            $scope.warningText = 'There is no data to display';
+            return null;
+          }
+          return response;
+        }, function(errorResponse) {
+          $scope.errorText = "Sorry, but an error occurred: " + errorResponse.statusText;
+          return null;
+        });
+      };
+      $scope.drawPassingFailingChart = function(data) {
+        return $scope.passingFailingChart = chartService.buildPassingFailingChart(data);
+      };
+      $scope.drawBuildDurationChart = function(data) {
+        return $scope.buildDurationChart = chartService.buildBuildDurationChart(data);
+      };
+      $scope.hideSeries = function(selectedItem) {
         var col;
         if (selectedItem == null) {
           return;
@@ -48366,6 +48379,16 @@ return jQuery;
           }
         }
       };
+      return $scope.getData().then(function(data) {
+        if (data == null) {
+          return null;
+        }
+        $scope.drawPassingFailingChart(data);
+        $scope.drawBuildDurationChart(data);
+        return $timeout(function() {
+          return $scope.loading = false;
+        }, 500);
+      });
     }
   ]);
 

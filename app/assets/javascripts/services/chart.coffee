@@ -166,7 +166,6 @@ app.service 'chartService', [ ->
     else
       Math.round((values[half-1] + values[half]) / 2.0)
 
-# Annotation will be set to "Stopped" series. To change it, set annotaion cols after needed series. I mean, cols order is important.
   setAnnotationsToPassingFailingChart = ->
     failingMedian = getMedian(Object.keys(frequencies).map((key) -> frequencies[key]))
     for row in passingFailingChart.data.rows

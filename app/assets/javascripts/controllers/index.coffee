@@ -5,7 +5,7 @@ app.controller 'index', [ '$scope', '$timeout', 'History', 'chartService',  ($sc
 
   $scope.getData = ->
     History.get().then (response) ->
-      if response == 0
+      if response.length == 0
         $scope.warningText = 'There is no data to display'
         return null
       response

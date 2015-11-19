@@ -42,7 +42,11 @@ app.service 'chartService', [ ->
     options:
       bar:
         groupWidth: '90%'
+      chartArea:
+        left: '5%'
+        width: '84%'
       isStacked: true
+      backgroundColor: '#f5f5f5'
       defaultColors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF', '#000000']
       colors: ['#00FF00', '#FF0000', '#FFA500', '#0059FF', '#000000']
       tooltip:
@@ -72,8 +76,12 @@ app.service 'chartService', [ ->
 # insert rows here
       ]
     options:
+      backgroundColor: '#f5f5f5'
       colors: ['#0059FF']
       displayExactValues: false
+      chartArea:
+        left: '5%'
+        width: '84%'
       vAxis:
         title: 'Build duration'
         gridlines:

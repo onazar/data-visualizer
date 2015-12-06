@@ -49,4 +49,15 @@ describe 'View builds history in two charts on main page', type: :feature, js: t
     expect(page.current_path).to eq root_path
   end
 
+  it 'should be able to show/hide any line of passing/failing chart' do
+    # blue "stopped rect"
+    selector = 'body > div > div > div > div:nth-child(2) > div.well.ng-scope > div:nth-child(2) > div > div:nth-child(1) > div > svg > g:nth-child(3) > g:nth-child(3) > rect:nth-child(3)'
+    elem = page.find(selector)
+    expect(elem.native.style('fill')).to eq('rgb(0, 89, 255)')
+    elem.click
+    # we need to re-find element, just trust me, i am an engineer :)
+    elem = page.find(selector)
+    expect(elem.native.style('fill')).to eq('rgb(204, 204, 204)')
+  end
+
 end

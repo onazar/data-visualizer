@@ -4,7 +4,6 @@ ruby '2.2.1'
 
 gem 'rails', '4.2.0'
 
-# gem 'sqlite3'
 gem 'bower-rails'
 gem 'jbuilder', '~> 2.0'
 

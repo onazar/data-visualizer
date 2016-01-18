@@ -7,11 +7,11 @@ app.controller 'index', [ '$scope', '$timeout', 'History', 'chartService',  ($sc
     History.get().then (response) ->
       if response.length == 0
         $scope.warningText = 'There is no data to display'
-        return null
+        null
       response
     ,(errorResponse) ->
       $scope.errorText = "Sorry, but an error occurred: #{errorResponse.statusText}"
-      return null
+      null
 
   $scope.drawPassingFailingChart = (data) ->
     $scope.passingFailingChart = chartService.buildPassingFailingChart(data)

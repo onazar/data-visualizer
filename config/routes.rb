@@ -1,12 +1,16 @@
+require 'api_constraints'
+
 Rails.application.routes.draw do
 
-  scope :api, module: :api, defaults: {format: :json} do
-    resources :history, only: [:index]
+  namespace :api, defaults: {format: :json} do
+    scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
+      resources :history, only: [:index]
+    end
   end
 
-  scope :module => :public do
-    root 'index#index'
+  scope module: :public do
     get '*path', :to => 'index#index'
+    root 'index#index'
   end
 
 end

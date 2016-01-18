@@ -26,21 +26,21 @@ describe 'View builds history in two charts on main page', type: :feature, js: t
   end
 
   it 'should display warning message and should not display charts when history file is empty' do
-    Api::HistoryController::CSV_FILE = Rails.root.join('spec', 'controllers', 'api', 'empty_file.csv')
+    Api::V1::HistoryController::CSV_FILE = Rails.root.join('spec', 'support', 'empty_file.csv')
     visit root_path
     expect(page).to have_content('There is no data to display')
     expect(page).to have_no_content('Passing and failing builds per day')
     expect(page).to have_no_content('Build duration vs. time')
-    Api::HistoryController::CSV_FILE = Rails.root.join('data', 'session_history.csv')
+    Api::V1::HistoryController::CSV_FILE = Rails.root.join('data', 'session_history.csv')
   end
 
   it 'should display error message and should not display charts when history file not found' do
-    Api::HistoryController::CSV_FILE = Rails.root.join('data', 'missing_file.csv')
+    Api::V1::HistoryController::CSV_FILE = Rails.root.join('data', 'missing_file.csv')
     visit root_path
     expect(page).to have_content('Sorry, but an error occurred: Internal Server Error')
     expect(page).to have_no_content('Passing and failing builds per day')
     expect(page).to have_no_content('Build duration vs. time')
-    Api::HistoryController::CSV_FILE = Rails.root.join('data', 'session_history.csv')
+    Api::V1::HistoryController::CSV_FILE = Rails.root.join('data', 'session_history.csv')
   end
 
   # except /api/history

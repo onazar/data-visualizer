@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Api::HistoryController, type: :controller do
+describe Api::V1::HistoryController, type: :controller do
 
   render_views
 
@@ -21,10 +21,10 @@ describe Api::HistoryController, type: :controller do
       end
 
       it 'should respond with 500 when file not found' do
-        Api::HistoryController::CSV_FILE = Rails.root.join('data', 'missing_file.csv')
+        Api::V1::HistoryController::CSV_FILE = Rails.root.join('data', 'missing_file.csv')
         xhr :get, :index
         expect(response.status).to eq(500)
-        Api::HistoryController::CSV_FILE = Rails.root.join('data', 'session_history.csv')
+        Api::V1::HistoryController::CSV_FILE = Rails.root.join('data', 'session_history.csv')
       end
     end
   end

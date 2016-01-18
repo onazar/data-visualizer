@@ -1,5 +1,5 @@
-angular.module("appResource", [ "rails" ]).factory "AppModel", [
-  "RailsResource",
+angular.module('appResource', [ 'rails' ]).factory 'AppModel', [
+  'RailsResource',
   (RailsResource) ->
 
     class AppModel extends RailsResource

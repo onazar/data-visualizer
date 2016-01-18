@@ -1,5 +1,6 @@
 require 'csv'
-class Api::HistoryController < ApplicationController
+
+class Api::V1::HistoryController < Api::V1::BaseController
 
   CSV_FILE = Rails.root.join('data', 'session_history.csv')
 

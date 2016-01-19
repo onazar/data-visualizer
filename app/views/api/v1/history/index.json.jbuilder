@@ -1,1 +1,0 @@
-json.array! @data_rows,  partial: 'row', as: :row

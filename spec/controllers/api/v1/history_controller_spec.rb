@@ -4,7 +4,7 @@ describe Api::V1::HistoryController, type: :controller do
 
   render_views
 
-  describe 'index' do
+  describe '#index' do
     before do
       xhr :get, :index
     end
@@ -16,15 +16,15 @@ describe Api::V1::HistoryController, type: :controller do
     end
 
     context 'there should be data source' do
-      it 'there should be "session_history.csv" file under "data" directory' do
-        expect(File.file?(Rails.root.join('data', 'session_history.csv'))).to eq(true)
-      end
+      # it 'there should be "session_history.csv" file under "data" directory' do
+      #   expect(File.file?(Rails.root.join('data', 'session_history.csv'))).to eq(true)
+      # end
 
       it 'should respond with 500 when file not found' do
-        Api::V1::HistoryController::CSV_FILE = Rails.root.join('data', 'missing_file.csv')
+        History::CSV_FILE = Rails.root.join('data', 'missing_file.csv')
         xhr :get, :index
         expect(response.status).to eq(500)
-        Api::V1::HistoryController::CSV_FILE = Rails.root.join('data', 'session_history.csv')
+        History::CSV_FILE = Rails.root.join('data', 'session_history.csv')
       end
     end
   end

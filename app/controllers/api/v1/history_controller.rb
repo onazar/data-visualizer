@@ -1,16 +1,12 @@
-require 'csv'
-
 class Api::V1::HistoryController < Api::V1::BaseController
 
-  CSV_FILE = Rails.root.join('data', 'session_history.csv')
-
   def index
-    @data_rows = []
-    CSV.foreach(CSV_FILE, headers: true) do |row|
-      @data_rows << History.new(row['session_id'], row['created_at'], row['summary_status'], row['duration'])
-    end
-    rescue Errno::ENOENT
+    history = History.read
+    if history
+      render json: history, each_serializer: Api::V1::HistorySerializer
+    else
       render nothing: true, status: 500
+    end
   end
 
 end

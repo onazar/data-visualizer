@@ -1,1 +1,0 @@
-json.(row, :session_id, :created_at, :status, :duration)

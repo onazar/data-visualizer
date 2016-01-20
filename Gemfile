@@ -19,6 +19,7 @@ gem 'angularjs-rails-resource'
 gem 'jquery-rails'
 
 group :development, :test do
+  gem 'quiet_assets'
   gem 'spring'
   gem 'rspec-rails', '~> 3.0'
   gem 'capybara'

@@ -6,6 +6,12 @@ app.service 'chartService', [ ->
   frequencies = {}
 
   passingFailingChart = {
+#    type: 'BarChart'
+#    type: 'AreaChart'
+#    type: 'ComboChart'
+#    type: 'LineChart'
+#    type: 'ScatterChart'
+#    type: 'Table'
     type: 'ColumnChart'
     data:
       cols: [
@@ -63,6 +69,12 @@ app.service 'chartService', [ ->
   }
 
   buildDurationChart = {
+#    type: 'BarChart'
+#    type: 'ColumnChart'
+#    type: 'ComboChart'
+#    type: 'LineChart'
+#    type: 'ScatterChart'
+#    type: 'Table'
     type: "AreaChart"
     data:
       cols: [
@@ -134,11 +146,13 @@ app.service 'chartService', [ ->
         v: stopped
         f: "#{stopped} builds"
       ,
-        # it always should be 0. abnormal series invisibility depends on it.
+        # it always should be 0. abnormal series (annotation series) invisibility depends on it.
         v: 0
       ,
+        # annotation
         v: ''
       ,
+        # annotation text
         v: ''
       ]
     )
@@ -162,23 +176,25 @@ app.service 'chartService', [ ->
       when 'error' then ++error
       when 'stopped' then ++stopped
 
-  shortDate = (longDateString) -> new Date(longDateString.substr(0, 10).replace(/-/g, ','))
+  shortDate = (longDateString) -> new Date(longDateString.substr(0, 10))
 
   getMedian = (values) ->
     # reject 0 because it is not 'normal', but 'perfect'
     values = values.filter (e) -> e > 0
+    # sort values in ascending order
     values.sort (a, b) -> a - b
-    half = Math.floor(values.length / 2)
+    middle = Math.floor(values.length / 2)
     if values.length % 2
-      values[half]
+      values[middle]
     else
-      Math.round((values[half-1] + values[half]) / 2.0)
+      Math.round((values[middle-1] + values[middle]) / 2)
 
   setAnnotationsToPassingFailingChart = ->
     failingMedian = getMedian(Object.keys(frequencies).map((key) -> frequencies[key]))
     for row in passingFailingChart.data.rows
-      # if today failing rate higher than usually
+      # if today failing rate higher than usually in current timeframe
       if frequencies[row.c[0].v] > failingMedian
+        # W! for warning
         annotation = 'W!'
         annotationText = "
               <p><b>Failing rate higher than usually</b></p>

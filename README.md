@@ -11,5 +11,5 @@ To run tests just run (you need installed firefox in your system)
 ```
 rake spec
 ```
-There are 13 tests at the moment
-![tests](http://cs630725.vk.me/v630725031/4e21/faZuoVuM8bA.jpg)
+There are 14 tests at the moment
+![tests](https://pp.vk.me/c630425/v630425426/db07/jRoLPwt6vzM.jpg)

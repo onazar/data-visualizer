@@ -1,5 +1,11 @@
 app.factory 'History', [ 'AppModel', (AppModel) ->
 
   class History extends AppModel
-    @configure url: '/history'
+    reqConfig = {
+      url: '/history'
+      httpConfig:
+        headers:
+          Accept: 'application/json api.data-visualizer.v1'
+    }
+    @configure(reqConfig)
 ]

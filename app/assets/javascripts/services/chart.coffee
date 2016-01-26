@@ -212,8 +212,24 @@ app.service 'chartService', [ ->
         row.c[6].v = annotation
         row.c[7].v = annotationText
 
+  changeSeriesVisibility = (chart, selectedItem) ->
+    return unless selectedItem?
+    col = selectedItem.column
+    # filter only clicks on the right section of the chart
+    if selectedItem.row == null
+      if chart.view.columns[col] == col
+        chart.view.columns[col] = {
+          label: chart.data.cols[col].label
+          type: chart.data.cols[col].type
+        }
+        chart.options.colors[col - 1] = '#CCCCCC'
+      else
+        chart.view.columns[col] = col
+        chart.options.colors[col - 1] = chart.options.defaultColors[col - 1]
+
   return {
     buildPassingFailingChart: buildPassingFailingChart
     buildBuildDurationChart: buildBuildDurationChart
+    changeSeriesVisibility: changeSeriesVisibility
   }
 ]

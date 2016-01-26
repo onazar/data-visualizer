@@ -19,20 +19,8 @@ app.controller 'index', [ '$scope', '$timeout', 'History', 'chartService',  ($sc
   $scope.drawBuildDurationChart = (data) ->
     $scope.buildDurationChart = chartService.buildBuildDurationChart(data)
 
-  $scope.changeSeriesVisibility = (selectedItem) ->
-    return unless selectedItem?
-    col = selectedItem.column
-    # filter only clicks on the right section of the chart
-    if selectedItem.row == null
-      if $scope.passingFailingChart.view.columns[col] == col
-        $scope.passingFailingChart.view.columns[col] = {
-          label: $scope.passingFailingChart.data.cols[col].label
-          type: $scope.passingFailingChart.data.cols[col].type
-        }
-        $scope.passingFailingChart.options.colors[col - 1] = '#CCCCCC'
-      else
-        $scope.passingFailingChart.view.columns[col] = col
-        $scope.passingFailingChart.options.colors[col - 1] = $scope.passingFailingChart.options.defaultColors[col - 1]
+  $scope.changeSeriesVisibility = (chart, selectedItem) ->
+    chartService.changeSeriesVisibility(chart, selectedItem)
 
   # initial load
   $scope.getData().then (data) ->
@@ -43,7 +31,7 @@ app.controller 'index', [ '$scope', '$timeout', 'History', 'chartService',  ($sc
       $scope.loading = false
     , 500
 
-# this method is not used now, but it is likely that it will be needed in the future.
+# this method is not used currently, but it is likely that it will be needed in the future.
 #  $scope.redrawCharts = ->
 #    $scope.getData().then (data) ->
 #      if data?

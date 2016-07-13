@@ -7,4 +7,4 @@ firefox:
 notify:
 - channel: hipchat
   room: sandbox
-  message: "@MalinovskyMax Status: %status% for %commit% from %committer%. Build %build-url%"
+  message: "@MalinovskyMax Status: %status% for %commit% %commit-message% from %committer%. Build %build-url%"

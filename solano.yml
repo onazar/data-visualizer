@@ -1,4 +1,4 @@
- ruby_version "ruby-2.2.1-p85"
+ruby_version "ruby-2.2.1-p85"
 bundler_version "1.11.2"
 postgresql
   version "9.2"
@@ -7,9 +7,9 @@ firefox
 plan
   - one
   - two
-profiles
-  one
-    test_pattern
+profiles:
+  one:
+    test_pattern:
       - spec/**_spec.rb
   two
     test_pattern

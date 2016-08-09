@@ -1,17 +1,17 @@
-ruby_version "ruby-2.2.1-p85"
-bundler_version "1.11.2"
-postgresql
-  version "9.2"
-firefox
-  version '31.0esr'
-plan
+ruby_version: "ruby-2.2.1-p85"
+bundler_versiоn '1.11.2'
+postgresql:
+  version: "9.2"
+firefox:
+  version: '31.0esr'
+plan:
   - one
   - two
 profiles:
   one:
     test_pattern:
       - spec/**_spec.rb
-  two
-    test_pattern
+  two:
+    test_pattern:
       - spec/**_spec.rb
 

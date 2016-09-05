@@ -2,7 +2,7 @@ require 'json'
 
 # pick at random for the sake of example.
 # replace this with your own logic
-next_profile = %w(first second third).sample
+next_profile = %w(one two).sample
 
 puts "choosing #{next_profile}"
 

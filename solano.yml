@@ -17,4 +17,4 @@ profiles:
       - spec/**_spec.rb
 
 hooks:
-  post_build: "./compute-next-to-run"
+  post_build: "ruby compute-next-to-run.rb"

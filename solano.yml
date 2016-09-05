@@ -5,8 +5,9 @@ postgresql:
 firefox:
   version: '31.0esr'
 plan:
-  - one
-  - two
+  - profile: one
+    sets: next_profile
+  - profile: "{{ next_profile }}"
 profiles:
   one:
     test_pattern:
@@ -14,3 +15,6 @@ profiles:
   two:
     test_pattern:
       - spec/**_spec.rb
+
+hooks:
+  post_build: "./compute-next-to-run"

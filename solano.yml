@@ -7,6 +7,7 @@ firefox:
 plan:
   - profile: one
   - profile: two
+  - profile: two
     sets: next_profile
   - profile: "{{ next_profile }}"
   - profile: "{{ next_profile }}"

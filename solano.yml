@@ -8,6 +8,7 @@ plan:
   - profile: one
     sets: next_profile
   - profile: "{{ next_profile }}"
+  - profile: "{{ next_profile }}"
 profiles:
   one:
     test_pattern:

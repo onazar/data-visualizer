@@ -6,8 +6,10 @@ firefox:
   version: '31.0esr'
 plan:
   - profile: one
+  - profile: one
   - profile: two
   - profile: two
+  - profile: one
     sets: next_profile
   - profile: "{{ next_profile }}"
   - profile: "{{ next_profile }}"

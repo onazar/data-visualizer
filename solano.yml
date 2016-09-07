@@ -12,16 +12,16 @@ plan:
 profiles:
   one:
     test_pattern:
-      - spec/**_spec.rb
+      - spec/models/history_spec.rb
   two:
     test_pattern:
-      - spec/**_spec.rb
+      - spec/models/history_spec.rb
   three:
     test_pattern:
-      - spec/**_spec.rb
+      - spec/models/history_spec.rb
   four:
     test_pattern:
-      - spec/**_spec.rb
+      - spec/models/history_spec.rb
 
 hooks:
   post_build: "ruby compute-next-to-run.rb"

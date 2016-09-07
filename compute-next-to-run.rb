@@ -1,5 +1,7 @@
 require 'json'
 
+profile = %w(two, four).sample
+
 File.open("solano-plan-variables.json", "w") do |f|
-    f.write(JSON.dump({"next_profile_two" => "two", "next_profile_four" => "four"}))
+    f.write(JSON.dump({"next_profile" => profile}))
 end

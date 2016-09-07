@@ -13,15 +13,23 @@ plan:
   - profile: "{{ fourth_profile }}"
 profiles:
   one:
+    environment:
+      PROFILE: "one"
     test_pattern:
       - spec/models/history_spec.rb
   two:
+    environment:
+      PROFILE: "two"
     test_pattern:
       - spec/models/history_spec.rb
   three:
+    environment:
+      PROFILE: "three"
     test_pattern:
       - spec/models/history_spec.rb
   four:
+    environment:
+      PROFILE: "four"
     test_pattern:
       - spec/models/history_spec.rb
 

@@ -7,8 +7,9 @@ firefox:
 plan:
   - profile: one
     sets: next_profile
-  - profile: "{{ next_profile }}"
+  - profile: "{{ next_profile_two }}"
   - profile: three
+  - profile: "{{ next_profile_four }}"
 profiles:
   one:
     test_pattern:

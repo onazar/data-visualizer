@@ -9,8 +9,8 @@ plan:
     sets: next_profile_two
   - profile: "{{ next_profile_two }}"
   - profile: three
-    sets: next_profile_four
-  - profile: "{{ next_profile_four }}"
+    sets: next_profile_two
+  - profile: "{{ next_profile_two }}"
 profiles:
   one:
     test_pattern:

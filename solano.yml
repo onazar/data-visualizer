@@ -6,11 +6,11 @@ firefox:
   version: '31.0esr'
 plan:
   - profile: one
-    sets: second_profile
-  - profile: "{{ second_profile }}"
+    sets: next_profile
+  - profile: "{{ next_profile }}"
   - profile: three
-    sets: fourth_profile
-  - profile: "{{ fourth_profile }}"
+    sets: next_profile
+  - profile: "{{ next_profile }}"
 profiles:
   one:
     environment:
